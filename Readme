@@ -1,0 +1,2 @@
+# Run the Project on Mac
+dotnet watch run

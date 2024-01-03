@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/WEB-API-In-Dot-Net-Mac.props" />
-</Project>

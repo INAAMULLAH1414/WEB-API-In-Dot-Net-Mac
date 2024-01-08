@@ -25,5 +25,10 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
         public ActionResult<Character> GetSingle(int id){
             return Ok(characters.FirstOrDefault(character => character.Id == id));
         }
+
+        public ActionResult<List<Character>> AddCharacter(Character newCharacter){
+            characters.Add(newCharacter);
+            return Ok(characters);
+        }
     }
 }

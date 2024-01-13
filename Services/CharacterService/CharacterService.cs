@@ -26,7 +26,11 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
 
         public Character GetCharacterById(int id)
         {
-            return characters.FirstOrDefault(character => character.Id == id);
+            var character = characters.FirstOrDefault(c => c.Id == id);
+            if(character is not null)
+                return character;
+            
+            throw new Exception("Character not found");
         }
     }
 }

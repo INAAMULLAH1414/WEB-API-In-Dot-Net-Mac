@@ -11,11 +11,24 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
     [Route("api/[controller]")]
     public class CharacterController : ControllerBase
     {
-        private static Character knight = new Character();
+        private static List<Character> characters = new List<Character> {
+            new Character(),
+            new Character { Id = 1, Name = "Inam"}
+        };
 
-        [HttpGet]
-        public ActionResult<Character> Get(){
-            return Ok(knight);
+        [HttpGet("GetAll")]
+        public ActionResult<List<Character>> Get(){
+            return Ok(characters);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Character> GetSingle(int id){
+            return Ok(characters.FirstOrDefault(character => character.Id == id));
+        }
+
+        public ActionResult<List<Character>> AddCharacter(Character newCharacter){
+            characters.Add(newCharacter);
+            return Ok(characters);
         }
     }
 }

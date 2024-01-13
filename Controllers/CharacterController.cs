@@ -18,18 +18,18 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
         }
 
         [HttpGet("GetAll")]
-        public ActionResult<List<Character>> Get(){
-            return Ok(_characterService.GetAllCharacters());
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> Get(){
+            return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Character> GetSingle(int id){
-            return Ok(_characterService.GetCharacterById(id));
+        public async Task<ActionResult<ServiceResponse<Character>>> GetSingle(int id){
+            return Ok(await _characterService.GetCharacterById(id));
         }
 
         [HttpPost]
-        public ActionResult<List<Character>> AddCharacter(Character newCharacter){
-            return Ok(_characterService.AddCharacter(newCharacter));
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> AddCharacter(Character newCharacter){
+            return Ok(await _characterService.AddCharacter(newCharacter));
         }
     }
 }

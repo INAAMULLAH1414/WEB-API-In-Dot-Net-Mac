@@ -1,5 +1,6 @@
 global using WEB_API_In_Dot_Net_Mac.Models;
 global using WEB_API_In_Dot_Net_Mac.Services.CharacterService;
+global using WEB_API_In_Dot_Net_Mac.Dtos.Character;
 
 var builder = WebApplication.CreateBuilder(args);
 

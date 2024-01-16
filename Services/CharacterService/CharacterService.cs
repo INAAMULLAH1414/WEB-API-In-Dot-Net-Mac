@@ -30,6 +30,28 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
+
+            try {
+                var character = characters.FirstOrDefault(character => character.Id == id);
+
+                if (character is null)
+                    throw new Exception($"Character with id '{id}' not found");
+
+                characters.Remove(character);
+
+                serviceResponse.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+            } catch (Exception ex) {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+
+            }
+           
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();

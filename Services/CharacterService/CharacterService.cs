@@ -14,10 +14,12 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
             new Character { Id = 1, Name = "Inam"}
         };
         private readonly IMapper _mapper;
+        private readonly DataContext _dataContext;
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext dataContext)
         {
             _mapper = mapper;
+            _dataContext = dataContext;
         }
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter)
@@ -55,15 +57,16 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            serviceResponse.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+            var dbCharacters = await _dataContext.Characters.ToListAsync();
+            serviceResponse.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            var character = characters.FirstOrDefault(character => character.Id == id);
-            serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
+            var dbCharacter = await _dataContext.Characters.FirstOrDefaultAsync(character => character.Id == id);
+            serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
             return serviceResponse;
         }
 

@@ -26,9 +26,10 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
             var character = _mapper.Map<Character>(newCharacter);
-            character.Id = characters.Max(character => character.Id) + 1;
-            characters.Add(character);
-            serviceResponse.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+            _dataContext.Characters.Add(character);
+            await _dataContext.SaveChangesAsync();
+            serviceResponse.Data = 
+                await _dataContext.Characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToListAsync();
             return serviceResponse;
         }
 

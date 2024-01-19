@@ -9,10 +9,6 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
 {
     public class CharacterService : ICharacterService
     {
-        private static List<Character> characters = new List<Character> {
-            new Character(),
-            new Character { Id = 1, Name = "Inam"}
-        };
         private readonly IMapper _mapper;
         private readonly DataContext _dataContext;
 
@@ -38,14 +34,16 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
 
             try {
-                var character = characters.FirstOrDefault(character => character.Id == id);
+                var character = await _dataContext.Characters.FirstOrDefaultAsync(character => character.Id == id);
 
                 if (character is null)
                     throw new Exception($"Character with id '{id}' not found");
 
-                characters.Remove(character);
+                _dataContext.Characters.Remove(character);
+                await _dataContext.SaveChangesAsync();
 
-                serviceResponse.Data = characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
+                serviceResponse.Data = 
+                    await _dataContext.Characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToListAsync();
             } catch (Exception ex) {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;

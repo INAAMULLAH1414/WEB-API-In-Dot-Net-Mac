@@ -20,22 +20,32 @@ namespace WEB_API_In_Dot_Net_Mac.Data
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
+            var response = new ServiceResponse<int>();
+            if(await UserExists(user.Username))
+            {
+                response.Success = false;
+                response.Message = "User already registered";
+                return response;
+            }
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            
+
            _dataContext.Users.Add(user);
            await _dataContext.SaveChangesAsync();
 
-           var response = new ServiceResponse<int>();
            response.Data = user.Id;
            return response;
         }
 
-        public Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string username)
         {
-            throw new NotImplementedException();
+            if(await _dataContext.Users.AnyAsync(user => user.Username.ToLower() == username.ToLower()))
+            {
+                return true;
+            }
+            return false;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

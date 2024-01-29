@@ -30,5 +30,19 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
                 return BadRequest(response);
             }
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<ServiceResponse<int>>> Login(UserLoginDto request)
+        {
+            var response = await _authRepo.Login(request.UserName, request.Password);
+
+            if(response.Success){
+                return Ok(response);
+            } 
+            else
+            {
+                return BadRequest(response);
+            }
+        }
     }
 }

@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WEB_API_In_Dot_Net_Mac.Data
 {
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _dataContext;
-
-        public AuthRepository(DataContext dataContext)
+        private readonly IConfiguration _configuration;
+        public AuthRepository(DataContext dataContext, IConfiguration configuration)
         {
+            _configuration = configuration;
             _dataContext = dataContext;
         }
         public async Task<ServiceResponse<string>> Login(string username, string password)
@@ -30,7 +33,7 @@ namespace WEB_API_In_Dot_Net_Mac.Data
             } 
             else
             {
-                response.Data = user.Id.ToString();
+                response.Data = CreateToken(user);
             }
 
             return response;
@@ -82,6 +85,25 @@ namespace WEB_API_In_Dot_Net_Mac.Data
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
             }
+        }
+
+        private string CreateToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username)
+            };
+
+            var appSettingsToken = _configuration.GetSection("AppSettings:Token");
+            if(appSettingsToken is null)
+            {
+                throw new Exception("AppSettings token is null.");
+            }
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Security.Cryptography);
+
+            return string.Empty;
         }
     }
 }

@@ -1,9 +1,11 @@
+using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WEB_API_In_Dot_Net_Mac.Data
 {
@@ -21,12 +23,12 @@ namespace WEB_API_In_Dot_Net_Mac.Data
             var response = new ServiceResponse<string>();
             var user = await _dataContext.Users
                 .FirstOrDefaultAsync(u => u.Username.ToLower().Equals(username.ToLower()));
-            if (user != null)
+            if (user is null)
             {
                 response.Success = false;
                 response.Message = "User not found";
             }
-            else if(!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            else if(VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
                 response.Message = "Wrong Password";
@@ -95,15 +97,27 @@ namespace WEB_API_In_Dot_Net_Mac.Data
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var appSettingsToken = _configuration.GetSection("AppSettings:Token");
+            var appSettingsToken = _configuration.GetSection("AppSettings")["token"];
             if(appSettingsToken is null)
             {
                 throw new Exception("AppSettings token is null.");
             }
 
-            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Security.Cryptography);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(appSettingsToken));
 
-            return string.Empty;
+            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials =  credentials
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }

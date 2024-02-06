@@ -3,6 +3,8 @@ global using WEB_API_In_Dot_Net_Mac.Services.CharacterService;
 global using WEB_API_In_Dot_Net_Mac.Dtos.Character;
 global using Microsoft.EntityFrameworkCore;
 global using WEB_API_In_Dot_Net_Mac.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,28 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => 
+    {
+        var tokenValue = builder.Configuration.GetSection("AppSettings:Token").Value;
+        if (tokenValue == null)
+        {
+            Console.WriteLine("Token value is missing or null in the configuration.");
+            // Handle the missing token value gracefully, such as logging an error or using a default value.
+        }
+        else
+        {
+            Console.WriteLine($"Token value retrieved from configuration: {tokenValue}");
+        }
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(tokenValue)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 var app = builder.Build();
 
@@ -28,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,7 +96,7 @@ namespace WEB_API_In_Dot_Net_Mac.Data
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var appSettingsToken = _configuration.GetSection("AppSettings")["token"];
+            var appSettingsToken = _configuration.GetSection("AppSettings::Token").Value;
             if(appSettingsToken is null)
             {
                 throw new Exception("AppSettings token is null.");

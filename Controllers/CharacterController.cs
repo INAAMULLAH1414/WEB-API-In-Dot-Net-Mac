@@ -19,6 +19,7 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
             _characterService = characterService;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get(){
             return Ok(await _characterService.GetAllCharacters());

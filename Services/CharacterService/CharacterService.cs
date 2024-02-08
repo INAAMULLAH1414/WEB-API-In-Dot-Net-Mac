@@ -53,10 +53,10 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
+        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters(int userId)
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            var dbCharacters = await _dataContext.Characters.ToListAsync();
+            var dbCharacters = await _dataContext.Characters.Where(c => c.User!.Id == userId).ToListAsync();
             serviceResponse.Data = dbCharacters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToList();
             return serviceResponse;
         }

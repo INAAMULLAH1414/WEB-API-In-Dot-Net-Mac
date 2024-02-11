@@ -44,7 +44,8 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
 
             try {
-                var character = await _dataContext.Characters.FirstOrDefaultAsync(character => character.Id == id);
+                var character = await _dataContext.Characters
+                    .FirstOrDefaultAsync(character => character.Id == id && character.User!.Id == GetUserId());
 
                 if (character is null)
                     throw new Exception($"Character with id '{id}' not found");
@@ -53,7 +54,9 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
                 await _dataContext.SaveChangesAsync();
 
                 serviceResponse.Data = 
-                    await _dataContext.Characters.Select(character => _mapper.Map<GetCharacterDto>(character)).ToListAsync();
+                    await _dataContext.Characters
+                        .Where(character => character.User!.Id == GetUserId())
+                        .Select(character => _mapper.Map<GetCharacterDto>(character)).ToListAsync();
             } catch (Exception ex) {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
@@ -74,7 +77,8 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            var dbCharacter = await _dataContext.Characters.FirstOrDefaultAsync(character => character.Id == id);
+            var dbCharacter = await _dataContext.Characters
+                .FirstOrDefaultAsync(character => character.Id == id && character.User!.Id == GetUserId());
             serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacter);
             return serviceResponse;
         }

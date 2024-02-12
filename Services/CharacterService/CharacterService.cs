@@ -89,9 +89,11 @@ namespace WEB_API_In_Dot_Net_Mac.Services.CharacterService
 
             try {
                 var character = 
-                    await _dataContext.Characters.FirstOrDefaultAsync(character => character.Id == updatedCharacter.Id);
+                    await _dataContext.Characters
+                        .Include(character => character.User)
+                        .FirstOrDefaultAsync(character => character.Id == updatedCharacter.Id);
 
-                if (character is null)
+                if (character is null || character.User!.Id != GetUserId())
                     throw new Exception($"Character with id '{updatedCharacter.Id}' not found");
 
                 _mapper.Map(updatedCharacter, character);

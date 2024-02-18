@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WEB_API_In_Dot_Net_Mac.Dtos.Fight;
 using WEB_API_In_Dot_Net_Mac.Services.FightService;
 
 namespace WEB_API_In_Dot_Net_Mac.Controllers
@@ -15,6 +16,12 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
         public FightController(IFightService fightService)
         {
             _fightService = fightService;
+        }
+
+        [HttpPost("Weapon")]
+        public async Task<ActionResult<ServiceResponse<AttackResultDto>>> WeaponAttack(WeaponAttackDto request)
+        {
+            return Ok(await _fightService.WeaponAttack(request));
         }
     }
 }

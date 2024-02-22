@@ -1,2 +1,45 @@
+# Requirements
+Download VS code and .Net SDK
+
+## Project Selection
+Run Command: "dotnet new" and see which app you want to create and choose appropriate application
+In my case I created ASP.NET Core webapi application
+For that you can run dotnet new webapi
+
+## Add required packages
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.SQLServer
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+## For Entity Framework core
+dotnet add package Microsoft.EntityFrameworkCore --version 7.0.0
+
+## For SQLServer
+dotnet add package Microsoft.EntityFrameworkCore.SQLServer --version 7.0.0
+
+## For Authentication purposes
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 7.0.1
+dotnet add package Swashbuckle.AspNetCore.Filters
+
+## AutoMapper
+dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
+
+# Setup (SQL Server Management Studio)SSMS for Mac
+
+1. Install Docker
+2. Setup Docker Image Read Documentation(https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash#pullandrun2022) 
+For help you can also go this link and follow the instructions. (https://setapp.com/how-to/install-sql-server)
+
+
+# For Migrations:
+dotnet tool install --global dotnet-ef
+
+For migration related things some commands are given below: 
+For migration help: dotnet ef -h.
+For adding migrations: dotnet ef migrations add InitialCreate
+For running migrations: dotnet ef database update
+
 # Run the Project on Mac
 dotnet watch run
+
+Goodluck!!! Hurray :)

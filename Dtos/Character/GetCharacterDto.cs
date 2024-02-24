@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB_API_In_Dot_Net_Mac.Dtos.Weapon;
 
 namespace WEB_API_In_Dot_Net_Mac.Dtos.Character
 {
@@ -14,5 +15,6 @@ namespace WEB_API_In_Dot_Net_Mac.Dtos.Character
         public int Defense { get; set; } = 10;
         public int Intelligence { get; set; } = 10;
         public RpgClass Class { get; set; } = RpgClass.Knight;
+        public GetWeaponDto? Weapon { get; set; }
     }
 }

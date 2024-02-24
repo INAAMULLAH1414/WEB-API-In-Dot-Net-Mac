@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using WEB_API_In_Dot_Net_Mac.Services.WeaponService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IWeaponService, WeaponService>();
 
 var app = builder.Build();
 

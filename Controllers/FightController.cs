@@ -35,5 +35,11 @@ namespace WEB_API_In_Dot_Net_Mac.Controllers
         {
             return Ok(await _fightService.Fight(request));
         }
+
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<List<HighScoreDto>>>> GetHighscore()
+        {
+            return Ok(await _fightService.GetHighscore());
+        }
     }
 }

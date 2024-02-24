@@ -16,5 +16,6 @@ namespace WEB_API_In_Dot_Net_Mac.Models
         public RpgClass Class { get; set; } = RpgClass.Knight;
         public User? User { get; set; }
         public Weapon? Weapon { get; set; }
+        public List<Skill>? Skills { get; set; }
     }
 }

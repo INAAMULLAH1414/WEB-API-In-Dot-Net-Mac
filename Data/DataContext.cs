@@ -15,6 +15,6 @@ namespace WEB_API_In_Dot_Net_Mac.Data
         public DbSet<Character> Characters => Set<Character>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Weapon> Weapons => Set<Weapon>();
-
+        public DbSet<Skill> Skills => Set<Skill>();
     }
 }
